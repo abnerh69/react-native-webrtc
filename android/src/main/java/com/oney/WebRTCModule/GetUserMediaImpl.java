@@ -203,6 +203,7 @@ class GetUserMediaImpl {
                 cameraEnumerator,
                 videoConstraintsMap);
 
+            Log.d(TAG, "ABNER on getUserMedia");
             videoTrack = createVideoTrack(cameraCaptureController);
         }
 
@@ -348,14 +349,17 @@ class GetUserMediaImpl {
         int height = displayMetrics.heightPixels;
         int fps = 30;
         ScreenCaptureController screenCaptureController = new ScreenCaptureController(width, height, fps, mediaProjectionPermissionResultData);
+        Log.d(TAG, "ABNER on createScreenTrack");
         return createVideoTrack(screenCaptureController);
     }
 
     private VideoTrack createVideoTrack(AbstractVideoCaptureController videoCaptureController) {
+        Log.d(TAG, "ABNER on GetUserMediaImpl.java createVideoTrack videoCaptureController");
         videoCaptureController.initializeVideoCapturer();
 
         VideoCapturer videoCapturer = videoCaptureController.videoCapturer;
         if (videoCapturer == null) {
+            Log.d(TAG, "ABNER on videoCapturer == null");
             return null;
         }
 
@@ -365,11 +369,14 @@ class GetUserMediaImpl {
             SurfaceTextureHelper.create("CaptureThread", eglContext);
 
         if (surfaceTextureHelper == null) {
+            Log.d(TAG, "ABNER Error creating SurfaceTextureHelper");
             Log.d(TAG, "Error creating SurfaceTextureHelper");
             return null;
         }
 
-        VideoSource videoSource = pcFactory.createVideoSource(videoCapturer.isScreencast());
+        // VideoSource videoSource = pcFactory.createVideoSource(videoCapturer.isScreencast());
+        VideoSource videoSource = pcFactory.createVideoSource(false);
+        Log.d(TAG, "ABNER on GetUserMediaImpl.java videoSource = pcFactory.createVideoSource(false);");
         videoCapturer.initialize(surfaceTextureHelper, reactContext, videoSource.getCapturerObserver());
 
         String id = UUID.randomUUID().toString();
